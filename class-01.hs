@@ -161,15 +161,21 @@ f2c a = (a-32)*5/9
       НОД(a, b) = НОД(b, a mod b), если b ≠ 0; 
       НОД(a, 0) = a.
 -}
---gcd' :: Integral a => a-> a-> a
---gcd' a 0 = a
---gcd' a b = gcd'(b (a `mod` b))
+gcd' :: Integral a => a -> a -> a
+gcd' a 0 = a
+gcd' a b = gcd' b (a `mod` b)
 
 -- з) Функция, возвращающая название дня недели по его номеру (от 1 до 7),
 --    если номер неправильный, генерируется исключение (функция error).
---dayOfWeek :: Int -> String
---dayOfWeek 1 =  "Monday"
-
+dayOfWeek :: Int -> String
+dayOfWeek 1 = "Monday"
+dayOfWeek 2 = "Tuesday"
+dayOfWeek 3 = "Wednesday"
+dayOfWeek 4 = "Thursday"
+dayOfWeek 5 = "Friday"
+dayOfWeek 6 = "Saturday"
+dayOfWeek 7 = "Sunday"
+dayOfWeek a = dayOfWeek(a `mod` 7)
 
 -- Далее типовые аннотации, если их нет, следует писать самостоятельно.
 
@@ -189,21 +195,29 @@ sign a
 	  x^2,  если 0 < x < 2,
           4,    если x ≥ 2.
 -}
-
-eval_f = undefined
+eval_f :: (Num a, Ord a) => a -> a
+eval_f x 
+	| x <= 0 = -x
+	| x >= 2 = 4
+	| otherwise = x^2
 
 -- б) Написать функцию, возвращающую текстовую характеристику ("hot", "warm", "cool", "cold")
 -- по заданному значению температуры в градусах Цельсия.
 describeTemperature :: Double -> String
-describeTemperature = undefined
-
+describeTemperature t
+	| t >= 75 = "hot"
+	| t >= 30 = "warm"
+	| t >= 5 = "cool"
+	| otherwise = "cold"
+	
 {- 
    в) (*) Дан список температур в градусах Фаренгейта. Вывести для каждого значения
     соответствующую текстовую характеристику.
 
   Решение:
 > map (describeTemperature . f2c) [82, 94, 50, 65, 34]
-
+	["cool","warm","cool","cool","cold"]
+  
   В этом решении с помощью операции (.) строится композиция (суперпозиция) функций
   и получившаяся функция применяется функцией map к каждому элементу списка.
 -}
@@ -211,24 +225,37 @@ describeTemperature = undefined
 -- 7) Рекурсия
 
 -- Пример. Вычислить сумму всех целых чисел от 1 до n (где n >= 1):
+sum_n :: (Ord a, Num a) => a -> a
 sum_n 1 = 1
 sum_n n
   | n > 1 = n + sum_n (n-1)
   | otherwise = error "n should be >= 1"
 
 -- а) Вычислить сумму всех целых чисел от a до b включительно.
-sum_ab = undefined
+sum_ab :: (Ord a, Num a) => a -> a -> a
+sum_ab a b 
+	| b >= a = a + sum_ab (a+1) b
+	| otherwise = 0
 
 {-
    б) Числовая последовательность определяется следующим образом:
       a1 = 1, a2 = 2, a3 = 3, a_k = a_{k−1} + a_{k−2} − 2*a_{k−3}, k = 4, 5, ...
       Вычислить её n-й элемент.
 -}
-eval_a_n = undefined
+eval_a_n :: (Ord a1, Num a1, Num a) => a1 -> a
+eval_a_n n
+	| n == 1 = 1
+	| n == 2 = 2
+	| n == 3 = 3
+	| n > 3 = eval_a_n (n-1) + eval_a_n (n-2) - 2*(eval_a_n (n-3))
 
 -- в) Вычислить, пользуясь рекурсией, n-ю степень числа a (n - целое):
-pow = undefined
-
+pow a n
+	| n == 0 = 1
+	| n == 1 = a
+	| n == (-1) = (1/a)
+	| n > 1 = pow(a*a) (n-1)
+	| n < 1 = pow(a*a) (n+1)
 -- г) Пользуясь ранее написанной функцией pow, вычислить сумму: 1^k + 2^k + ... + n^k.
 sum_nk = undefined
 
