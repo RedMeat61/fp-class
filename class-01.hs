@@ -250,6 +250,7 @@ eval_a_n n
 	| n > 3 = eval_a_n (n-1) + eval_a_n (n-2) - 2*(eval_a_n (n-3))
 
 -- в) Вычислить, пользуясь рекурсией, n-ю степень числа a (n - целое):
+pow :: (Ord a1, Num a1, Fractional a) => a -> a1 -> a
 pow a n
 	| n == 0 = 1
 	| n == 1 = a
