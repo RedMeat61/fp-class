@@ -199,7 +199,7 @@ eval_f :: (Num a, Ord a) => a -> a
 eval_f x 
 	| x <= 0 = -x
 	| x >= 2 = 4
-	| otherwise = x^2
+	| otherwise = x*x
 
 -- б) Написать функцию, возвращающую текстовую характеристику ("hot", "warm", "cool", "cold")
 -- по заданному значению температуры в градусах Цельсия.
@@ -249,6 +249,8 @@ eval_a_n n
 	| n == 3 = 3
 	| n > 3 = eval_a_n (n-1) + eval_a_n (n-2) - 2*(eval_a_n (n-3))
 
+		
+	
 -- в) Вычислить, пользуясь рекурсией, n-ю степень числа a (n - целое):
 pow :: (Ord a1, Num a1, Fractional a) => a -> a1 -> a
 pow a n
@@ -258,20 +260,39 @@ pow a n
 	| n > 1 = pow(a*a) (n-1)
 	| n < 1 = pow(a*a) (n+1)
 -- г) Пользуясь ранее написанной функцией pow, вычислить сумму: 1^k + 2^k + ... + n^k.
-sum_nk = undefined
+sum_nk :: (Ord a1, Ord a, Num a1, Fractional a) => a -> a1 -> a
+sum_nk n k
+	| n == 1 = 1
+	| k == 0 = n
+	| k == 1 = sum_n n
+	| n > 1 = pow n k + sum_nk (n-1) k
 
 -- д) Сумма факториалов чисел от 1 до n.
+sum_fact :: (Num a, Eq a) => a -> a
 sum_fact 1 = 1
-sum_fact n = undefined
+sum_fact n = fact n * sum_fact(n-1)
   where
-    fact n = undefined
+    fact n 
+	| n == 0 = 1
+	| otherwise = n*fact(n-1)
 
 -- е) Количество цифр целого числа
-number_digits = undefined
+number_digits :: (Num a1, Integral a) => a -> a1
+number_digits a = namberabs (abs(a))
+	where
+		namberabs a
+			| a <= 9 = 1 
+			| otherwise = 1 + namberabs (a `div` 10)
 
 -- ж) Проверить, является ли заданное число простым.
-isPrime = undefined
-
+isPrime :: Integral a => a->Bool
+isPrime n = isdiv n 2
+	where
+		isdiv n i
+			| i >= (n `div `2) = True
+			| n `mod` i == 0 = False
+			| otherwise = isdiv n (i+1)
+	
 -- 8) Разное
 
 {-
@@ -282,6 +303,9 @@ isPrime = undefined
   а 1200 и 2000 — являются).
 -}
 
-nDays year = undefined
-  where
-    isLeap = undefined
+nDaysyear n
+	| isLeap n = 366
+	| otherwise = 365
+		where
+			isLeap n = mod n 4 == 0 && (mod n 100 /= 0 || mod n 400 == 0)
+			
