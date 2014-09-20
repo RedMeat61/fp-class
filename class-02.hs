@@ -2,14 +2,14 @@
 -- Написать функцию, которая разбивает промежуток времени в секундах на часы, минуты и секунды.
 -- Результат возвращать в виде кортежа из трёх элементов. Реализовать также обратное преобразование.
 sec2hms :: Int -> (Int, Int, Int)
-sec2hms = undefined
+sec2hms s = ((s `div` 3600), (s `div` 60 `mod` 60), (s `mod` 60))
 
 hms2sec :: (Int, Int, Int) -> Int
-hms2sec (h, m, s) = undefined
+hms2sec (h, m, s) = h * 3600 + m * 60 + s
 
 -- Реализовать с помощью hms2sec (здесь параметры заданы по отдельности)
 hms2sec' :: Int -> Int -> Int -> Int
-hms2sec' = undefined
+hms2sec' h m s = hms2sec (h, m, s)
 
 -- должно быть True
 test1 = and $ map (\x -> x == hms2sec (sec2hms x)) [1,10..10000]
@@ -22,13 +22,16 @@ test1 = and $ map (\x -> x == hms2sec (sec2hms x)) [1,10..10000]
 type Point = (Double, Double)
 
 distance :: Point -> Point -> Double
-distance (x1, y1) (x2, y2) = undefined
+distance (x1, y1) (x2, y2) = sqrt((x2-x1)^2+(y2-y1)^2)
 
--- triangle :: ??? -> (Double, Double)
-triangle _ = (p, s)
+triangle :: Point -> Point -> Point  -> (Double, Double)
+triangle (x1, y1) (x2, y2) (x3, y3) = (p, s)
   where
-    p = undefined
-    s = undefined
+    ab = distance (x1, y1) (x2, y2)
+    bc = distance (x2, y2) (x3, y3)
+    ca = distance (x3, y3) (x1, y1)
+    p = ab + bc + ca
+    s = sqrt(p/2*(p/2-ab)*(p/2-bc)*(p/2-ca))
 
 -- Во всех следующих заданиях использование стандартных функций обработки списков не допускается.
 -- Все решения должны реализовываться рекурсивными функциями.
@@ -37,7 +40,9 @@ triangle _ = (p, s)
 -- Определить рекурсивную функцию, определяющую количество чётных элементов списка
 nEven :: Integral a => [a] -> Int
 nEven [] = 0
-nEven (x:xs) = undefined
+nEven (x:xs) 
+	| mod x 2 == 0 = 1 + nEven(xs) 
+	| otherwise = nEven(xs)
 
 -- 2.2
 -- Увеличить все элементы заданного списка в два раза.
