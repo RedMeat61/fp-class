@@ -1,5 +1,11 @@
+import Data.List
+
+import Data.Char
+
+import Data.String
+
 {-
-Явная рекурсия в решениях хотя и допускается, но не при  ветствуется. Старайтесь обходиться стандартными
+Явная рекурсия в решениях хотя и допускается, но не приветствуется. Старайтесь обходиться стандартными
 функциями, используя при этом создание функций «на лету». Пытайтесь максимально упростить уже написанные
 решения, применяя подходящие функции из модуля Data.List и любых других модулей. Перед выполнением заданий
 изучите примеры из лекции по функциям высшего порядка. 
@@ -28,22 +34,19 @@ f11e :: Integral a => [a] -> [a]
 f11e = filter ( < 0)
 f11f :: Integral a => [a] -> [a]
 f11f = filter (\x -> (x< 0) || ((x>0) && ( odd x)))
+
 {-
  1.2 Дан список декартовых координат точек на плоскости (пар вещественных чисел).
      Преобразовать его следующим образом:
   a) отфильтровать список так, чтобы в нём остались точки из заданной координатной четверти;
   b) преобразовать декартовы координаты в полярные.
 -}
-
 f12a 1 = filter(\(a,b) -> (a > 0) && (b > 0))
 f12a 2 = filter(\(a,b) -> (a < 0) && (b > 0))
 f12a 3 = filter(\(a,b) -> (a < 0) && (b < 0))
 f12a 4 = filter(\(a,b) -> (a > 0) && (b < 0))
-
-{-f12b (x,y)=
-	|x<0 = map(\(x,y)->(sqrt(x^2+y^2),(atan(y/x)+pi)))
-	|otherwise = map(\(x,y)->(sqrt(x^2+y^2),(atan(y/x))))
--}
+f12b = map(\(x,y)->if (x < 0) then (sqrt(x^2+y^2),(atan(y/x)+pi)) else(sqrt(x^2+y^2),(atan(y/x))))
+	
 
 {-
  1.3 Дан список слов.
@@ -52,9 +55,13 @@ f12a 4 = filter(\(a,b) -> (a > 0) && (b < 0))
   c) Извлечь из него подсписок слов, начинающихся с заданной буквы.
 -}
 
-f13a :: [String] -> [String]
-f13a = map undefined
 
+f13a :: [String] -> [String]
+f13a = map(map(\s -> toUpper s)) 
+f13b :: [String] -> Int -> [String]
+f13b w n = filter(\s -> length s == n) w
+f13c :: [String] -> Char -> [String]
+f13c w c = filter(\(s:ss) -> s == c) w
 {-
 2. Формирование числовых последовательностей (iterate).
  a) Список натуральных чисел, начиная с 0.
@@ -64,9 +71,13 @@ f13a = map undefined
  e) Список строк, представляющих n-значные двоичные числа.
 -}
 
-nats :: [Integer]
-nats = iterate undefined 0
-
+f2a :: [Integer]
+f2a = iterate(+1) 0
+f2b = iterate(+2) 2
+f2c = iterate(\x -> (1+x)/2) 1
+f2d = take 26 $ iterate (chr .(+1) . ord) 'a'
+f2e 1 = ["1", "0"]
+f2e n = iterate(\ss -> (map (\s-> concat[s,"1"]) ss) ++ (map (\s-> concat[s,"0"]) ss))["1"] !! (n-1)
 {-
 3. Группировка списков.
   a) Дан список символов. Сгруппировать подряд идущие символы по принципу: цифры — не цифры — ...
@@ -78,12 +89,24 @@ nats = iterate undefined 0
      длиной n элементов со сдвигом относительно предыдущего подсписка на m элементов.
   e) Дан список. Определить длину самого длинного подсписка, содержащего подряд идущие одинаковые элементы.
 -}
+f3a = groupBy(\a b -> isDigit a && isDigit b || (not . isDigit) a && (not . isDigit) b)
 
-f3d :: [a] -> Int -> Int -> [[a]]
-f3d xs n m = undefined
+f3b = groupBy (\a b -> quarter a == quarter b)
+  where
+    quarter (x, y)
+      | x>=0 && y>=0 = 1
+      | x<0 && y>=0 = 2
+      | x<0 && y<0 = 3
+      | x>=0 && y<0 = 4 
 
+f3c n = takeWhile(\x -> (length x == n)).takeWhile(\x -> (length x > 0)).map(take n).iterate(drop n)
+	  
+--f3d :: [a] -> Int -> Int -> [[a]]
+f3d :: Int -> Int -> [a] -> [[a]]
+f3d n m =takeWhile(\x -> (length x > 0)).map(take n).iterate(drop m)
+	
 -- Должно быть True
-test_f3d = f3d [1..10] 4 2 == [[1,2,3,4],[3,4,5,6],[5,6,7,8],[7,8,9,10],[9,10]]
+test_f3d = f3d 4 2 [1..10] == [[1,2,3,4],[3,4,5,6],[5,6,7,8],[7,8,9,10],[9,10]]
 
 {-
 4. Разные задачи.
@@ -97,3 +120,10 @@ test_f3d = f3d [1..10] 4 2 == [[1,2,3,4],[3,4,5,6],[5,6,7,8],[7,8,9,10],[9,10]]
     называется элемент, больший своих соседей.
  e) Дан список. Продублировать все его элементы.
 -}
+
+f4a str = length (filter (\(x:xs) -> isDigit x) (f3a str))
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+f4b p a b = sum $ filter p (drop a(take b fibs))
+f4c str n = (take n).map(take 1).sortBy(\a b -> compare (length b) (length a)) $ group $ sort str
+f4d xs =  map (\(x1:x2:x3:xs) -> x2) $ filter (\(x1:x2:x3:xs) -> x2>x1 && x2>x3) $ filter (\xs -> length xs == 3) $ map (take 3) $ tails xs 
+f4e xs = concat $ map (\x -> [x, x]) xs
