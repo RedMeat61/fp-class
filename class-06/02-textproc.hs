@@ -13,4 +13,32 @@
   командной строки.
 -}
 
-main = undefined
+import System.Environment
+import Data.List
+import System.IO
+
+
+{-
+createFile :: Int -> String -> FilePath -> IO ()
+createFile n s fname = writeFile "file.txt" (unwords(replicate n s))
+-}
+processFile handle = nLine 0
+    
+
+nLine i = do
+     line <- getLine 
+     if null line
+        then putStr "i"
+        else (nLine (i+1))
+	
+first (x:xs) = do
+	withFile x ReadMode processFile 
+	nLine 0
+
+
+main = do
+  args <- getArgs
+  first (tail args)
+ {- [n_str, text, fname] <- getArgs
+  createFile (read n_str) text fname
+-}
