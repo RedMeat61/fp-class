@@ -22,23 +22,32 @@ import System.IO
 createFile :: Int -> String -> FilePath -> IO ()
 createFile n s fname = writeFile "file.txt" (unwords(replicate n s))
 -}
-processFile handle = nLine 0
-    
 
+{-
 nLine i = do
      line <- getLine 
      if null line
         then putStr "i"
         else (nLine (i+1))
-	
-first (x:xs) = do
-	withFile x ReadMode processFile 
-	nLine 0
+-}	
+c1 (x:xs) = do
+	withFile x ReadMode procF1 
 
+procF1 handle = do
+	contents <- hGetContents handle
+	putStr (show (length $ lines contents))	
+
+c2 (x:xs) = do
+	writeFile x "666"
+procF2 handle = do
+	contents <- hGetContents handle
+	putStr (show (length $ lines contents))	
 
 main = do
   args <- getArgs
-  first (tail args)
+  case (head args) of
+	"1" -> c1 (tail args)
+  	"2" -> c2 (tail args)
  {- [n_str, text, fname] <- getArgs
   createFile (read n_str) text fname
 -}
