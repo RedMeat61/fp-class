@@ -16,20 +16,11 @@
 import System.Environment
 import Data.List
 import System.IO
+import System.Directory
+import Data.Char
+import Data.String
+import System.Random
 
-
-{-
-createFile :: Int -> String -> FilePath -> IO ()
-createFile n s fname = writeFile "file.txt" (unwords(replicate n s))
--}
-
-{-
-nLine i = do
-     line <- getLine 
-     if null line
-        then putStr "i"
-        else (nLine (i+1))
--}	
 c1 (x:xs) = do
 	withFile x ReadMode procF1 
 
@@ -37,17 +28,44 @@ procF1 handle = do
 	contents <- hGetContents handle
 	putStr (show (length $ lines contents))	
 
-c2 (x:xs) = do
-	writeFile x "666"
-procF2 handle = do
-	contents <- hGetContents handle
-	putStr (show (length $ lines contents))	
+{-fn str b/e-}
+c2 (fn:str:bn:[]) = do
+	if bn == "e" then
+		appendFile fn str
+	else do 
+		contents <- readFile fn
+		writeFile "temp.txt" $ unlines $ str : (lines contents)
+		renameFile "temp.txt" fn
+	
 
+c3 (fn:xs) = do
+	contents <- readFile fn
+	putStr(map toUpper contents) 
+
+c4 (f1:f2:xs) = do
+	co1 <- readFile f1
+	co2 <- readFile f2
+	writeFile "02_4.txt" $ unlines $ foldl(\acc x -> acc ++ [(fst x)] ++ [(snd x)])[] $ zip (lines co1) (lines co2)
+
+c5rec l s i gen = if i < l then do
+		appendFile "temp.txt" $ map(\x -> chr x) $ take s $ randomRs (32,126) (mkStdGen gen)
+		appendFile "temp.txt" "\n"
+		c5rec l s (i+1) (gen+i)
+	else
+		appendFile "temp.txt" $ map(\x -> chr x) $ take s $ randomRs (32,126) (mkStdGen gen)
+		
+		
+c5 (fn:l:s:gen:xs) = do
+	c5rec (read l) (read s - 1) 1 (read gen) 
+	renameFile "temp.txt" fn
 main = do
   args <- getArgs
   case (head args) of
 	"1" -> c1 (tail args)
   	"2" -> c2 (tail args)
+	"3" -> c3 (tail args)
+	"4" -> c4 (tail args)
+	"5" -> c5 (tail args)
  {- [n_str, text, fname] <- getArgs
   createFile (read n_str) text fname
 -}
