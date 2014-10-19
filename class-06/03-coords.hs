@@ -15,18 +15,6 @@ import System.Directory
 import Data.Char
 import Data.String
 
-
-{-
-c1rec fn n gen = if n > 0 then do
-	appendFile "temp.txt" 
-	
-c5rec l s i gen = if i < l then do
-		appendFile "temp.txt" $ map(\x -> chr x) $ take s $ randomRs (32,126) (mkStdGen gen)
-		appendFile "temp.txt" "\n"
-		c5rec l s (i+1) (gen+i)
-	else
-		appendFile "temp.txt" $ map(\x -> chr x) $ take s $ randomRs (32,126) (mkStdGen gen)
-		-}
 		
 c1 (fn:n:[]) = do
 	gen1 <- newStdGen
