@@ -26,13 +26,27 @@ c1 fn (kf:gf:[]) = do
 	contents <- readFile fn
 	let sa = foldl (\ (acc, i) (fio:age:k:g) -> (acc + (read age),i+1))(0,0) $ filter(\(fio:age:k:g) -> ((k == kf) && (g == [gf]))) $ map (endBy ";" ) $ lines $ contents
 	putStr $  show $ (fst sa) / (snd sa)
-	
-		
 
+ooo (fio:age:k:g) (fio2:age2:k2:g2)  
+	|((read k ) > (read k2 )) = GT
+	|((read k ) < (read k2 )) = LT
+	|(((read k) == (read k2 )) && ((read g ) > (read g2 ))) = GT
+	|(((read k ) == (read k2 )) && ((read g ) < (read g2 ))) = LT
+	|(((read k ) == (read k2 )) && ((read g ) == (read g2 ))) = EQ
+
+{-
+	groupBy (\ (fio:age:k:g) (fio2:age2:k2:g2) -> ((k == k2) && (g == g2))) $	
+-}	
+c2 fn [] = do 
+	contents <- readFile fn
+	let sa =   sortBy ooo $ map (endBy ";" ) $ lines $ contents
+	putStr $  show $ sa
+	where
+		
 main = do
 	fn:args <- getArgs
 	case (head args) of
 		"1" -> c1 fn (tail args)
-		--"2" -> c2 (tail args)
+		"2" -> c2 fn (tail args)
 		--"3" -> c3 (tail args)
 
