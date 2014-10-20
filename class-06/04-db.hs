@@ -22,9 +22,12 @@ import Data.Char
 import Data.String
 
 
-c1 fn (k:g:[]) = do
+c1 fn (kf:gf:[]) = do
 	contents <- readFile fn
-	putStr $ show $ map (endBy ";" ) $ lines $ contents
+	let sa = foldl (\ (acc, i) (fio:age:k:g) -> (acc + (read age),i+1))(0,0) $ filter(\(fio:age:k:g) -> ((k == kf) && (g == [gf]))) $ map (endBy ";" ) $ lines $ contents
+	putStr $  show $ (fst sa) / (snd sa)
+	
+		
 
 main = do
 	fn:args <- getArgs
