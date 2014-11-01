@@ -4,7 +4,9 @@
    toList :: a -> [a]
    fromList :: [a] -> a
 -}
-
+class Listable a where
+   toList :: a -> [a]
+   fromList :: [a] -> a
 
 {-
   Объявите экземпляры класса типов Listable для следующих типов:

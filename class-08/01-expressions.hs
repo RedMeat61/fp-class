@@ -1,4 +1,4 @@
-
+import Data.List 
 {-
   Имеется тип данных для представления арифметических выражений с целыми числами
   и функция для вычисления его значения. 
@@ -20,7 +20,7 @@ eval (e1 `Mul` e2) = eval e1 * eval e2
 -}
 
 instance Eq Expr where
-  (==) = undefined
+  a == b = eval a == eval b
 
 {-
   Реализуйте для этого типа экземпляр класса типов Show так,
@@ -30,8 +30,11 @@ instance Eq Expr where
 -}
 
 instance Show Expr where
-  show = undefined
-
+  show (I a) = show (a)
+  show (Add a b) = show (a) ++ "+" ++ show (b)
+  show ((a `Add` b) `Mul` c) = "(" ++ show (a) ++ "+" ++ (show b)++ ")"++ "*" ++ show (c)
+  show (c `Mul` (a `Add` b)) = show (c) ++ "*" ++ "(" ++ show (a) ++ "+" ++ (show b) ++ ")"
+  show (Mul a b) = show (a) ++ "*" ++ show (b)
 -- Тесты
 test = all (== expr 4) exprs
        && all (/= (I 10)) exprs
@@ -47,3 +50,5 @@ test = all (== expr 4) exprs
 {-
   Напишите экземпляр класса типов Ord, который сравнивает выражения по их значению.
 -}
+instance Ord Expr where
+   a <= b = eval a <= eval b
