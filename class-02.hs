@@ -10,6 +10,15 @@ hms2sec (h, m, s) = h * 3600 + m * 60 + s
 -- Реализовать с помощью hms2sec (здесь параметры заданы по отдельности)
 hms2sec' :: Int -> Int -> Int -> Int
 hms2sec' h m s = hms2sec (h, m, s)
+sec2hms = undefined
+
+hms2sec :: (Int, Int, Int) -> Int
+hms2sec (h, m, s) = undefined
+
+-- Реализовать с помощью hms2sec (здесь параметры заданы по отдельности)
+hms2sec' :: Int -> Int -> Int -> Int
+hms2sec' = undefined
+
 
 -- должно быть True
 test1 = and $ map (\x -> x == hms2sec (sec2hms x)) [1,10..10000]
@@ -22,6 +31,7 @@ test1 = and $ map (\x -> x == hms2sec (sec2hms x)) [1,10..10000]
 type Point = (Double, Double)
 
 distance :: Point -> Point -> Double
+
 distance (x1, y1) (x2, y2) = sqrt((x2-x1)^2+(y2-y1)^2)
 
 triangle :: Point -> Point -> Point  -> (Double, Double)
@@ -33,6 +43,14 @@ triangle (x1, y1) (x2, y2) (x3, y3) = (p, s)
     p = ab + bc + ca
     s = sqrt(p/2*(p/2-ab)*(p/2-bc)*(p/2-ca))
 
+
+
+-- triangle :: ??? -> (Double, Double)
+triangle _ = (p, s)
+  where
+    p = undefined
+    s = undefined
+
 -- Во всех следующих заданиях использование стандартных функций обработки списков не допускается.
 -- Все решения должны реализовываться рекурсивными функциями.
 
@@ -40,9 +58,13 @@ triangle (x1, y1) (x2, y2) (x3, y3) = (p, s)
 -- Определить рекурсивную функцию, определяющую количество чётных элементов списка
 nEven :: Integral a => [a] -> Int
 nEven [] = 0
+
 nEven (x:xs) 
 	| mod x 2 == 0 = 1 + nEven(xs) 
 	| otherwise = nEven(xs)
+=======
+nEven (x:xs) = undefined
+
 
 -- 2.2
 -- Увеличить все элементы заданного списка в два раза.
@@ -50,13 +72,16 @@ nEven (x:xs)
 -- > 1 : [2,3,4]
 --   [1,2,3,4]
 doubleElems :: Num a => [a] -> [a]
+
 doubleElems [] = []
 doubleElems (x:xs) = 2*x:doubleElems (xs)
+
 
 -- 2.3
 -- Дан список целых чисел. Сформировать новый список, содержащий только нечетные элементы исходного.
 fltOdd :: Integral a => [a] -> [a]
 fltOdd [] = []
+
 fltOdd (x:xs) 
 	| x `mod` 2 == 1 = x:fltOdd (xs)
 	| otherwise = fltOdd (xs)
@@ -64,6 +89,7 @@ fltOdd (x:xs)
 -- 2.4
 -- Написать следующие функции обработки списков:
 -- а) удалить все отрицательные элементы;
+
 delSubZero :: Integral a => [a] -> [a]
 delSubZero [] = []
 delSubZero (x:xs) 
@@ -84,6 +110,9 @@ sortEvenUneven :: Integral a => [a] -> [a]
 sortEvenUneven [] = []
 sortEvenUneven [_] = []
 sortEvenUneven (x:xs) =  head1 xs : x : sortEvenUneven (tail1 xs)
+-- б) увеличить элементы с чётными значениями в два раза;
+-- в) переставить местами чётные и нечётные по порядку следования элементы
+--    (для списков нечётной длины отбрасывать последний элемент).
 
 -- 2.5 
 -- Даны два списка целых чисел. Сформировать список, каждый элемент которого равен сумме
@@ -91,11 +120,14 @@ sortEvenUneven (x:xs) =  head1 xs : x : sortEvenUneven (tail1 xs)
 combine_plus :: [Integer] -> [Integer] -> [Integer]
 combine_plus [] ys = ys
 combine_plus xs [] = xs
+<<<<<<< HEAD
 combine_plus (x:xs) (y:ys) = (x+y):(combine_plus xs ys)
+
 
 -- 2.6
 -- Даны два списка. Сформировать новый список, содержащий пары из соответствующих элементов
 -- исходных списков. Хвост более длинного списка отбросить.
+
 zip' :: [a] -> [b] -> [(a, b)]
 zip' [ ] _ = [ ]
 zip' _ [ ] = [ ]
@@ -115,10 +147,20 @@ insertEverywhere :: a -> [a] -> [a]
 insertEverywhere a [] = []
 insertEverywhere a [x] = [x]
 insertEverywhere a (x:y:xs) = x : a : (insertEverywhere a (y:xs))
+
+-- 2.7
+-- Написать функции, которые по заданному n возвращают список, состоящий из n первых натуральных чисел
+-- а) в порядке убывания;
+-- б) в порядке возрастания.
+
+-- 2.8
+-- Дан элемент типа a и список [a]. Вставить между всеми элементами списка заданный элемент.
+
 -- 2.9
 -- Написать функцию, которая разбивает список на два подсписка: элементы из начала списка,
 -- совпадающие с первым элементом, и все остальные элементы, например:
 -- [1,1,1,2,3,1] -> ([1,1,1], [2,3,1]).
+
 numberOfFirstAndOther (x:xs) = (first x (x:xs), other x (x:xs))
 	where
 		first y [] = []
@@ -134,6 +176,7 @@ numberOfFirstAndOther (x:xs) = (first x (x:xs), other x (x:xs))
 -- Даны типовые аннотации функций. Попытайтесь догадаться, что они делают, и напишите их
 -- рекурсивные реализации (если вы можете предложить несколько вариантов, реализуйте все):
 -- а) [a] -> Int -> a
+
 index :: [a] -> Int -> a
 index (x:xs) i 
 	|i == 0 = x
@@ -195,3 +238,12 @@ listOfUnique [] = []
 listOfUnique (x:xs)
 	|find xs x = listOfUnique xs
 	|otherwise = x:(listOfUnique xs)
+
+-- б) Eq a => [a] -> a -> Bool
+-- в) [a] -> Int -> [a]
+-- г) a -> Int -> [a]
+-- д) [a] -> [a] -> [a]
+-- е) Eq a => [a] -> [[a]]
+-- ж) [a] -> [(Int, a)]
+-- з) Eq a => [a] -> [a]
+
