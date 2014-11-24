@@ -7,7 +7,10 @@ import System.Environment
 -}
 
 reduce :: Integral a => a -> a
-reduce = undefined
+reduce x 
+	|x `mod` 3 == 0 = 0
+	|odd x = x^2
+	|otherwise = x^3
 
 {-
   Напишите функцию, применяющую функцию reduce заданное количество раз к значению в контексте,
@@ -15,7 +18,8 @@ reduce = undefined
 -}
 
 reduceNF :: (Functor f, Integral a) => Int -> f a -> f a
-reduceNF = undefined
+reduceNF 0 x = x
+reduceNF n x = reduceNF (n-1) (fmap reduce x)
 
 {-
   Реализуйте следующие функции-преобразователи произвольным, но, желательно, осмысленным и
@@ -23,13 +27,16 @@ reduceNF = undefined
 -}
 
 toList :: Integral a => [(a, a)]  -> [a]
-toList = undefined
+toList [] = []
+toList xs = fmap (\(x,y)->(x^2+y^2)) xs
 
 toMaybe :: Integral a => [(a, a)]  -> Maybe a
-toMaybe = undefined
+toMaybe [] = Nothing
+toMaybe xs =  fmap (sum . toList) (Just xs)
 
 toEither :: Integral a => [(a, a)]  -> Either String a
-toEither = undefined
+toMaybe [] = Left "[]"
+toMaybe xs =  fmap (sum . toList) (Right xs)
 
 -- воспользуйтесь в этой функции случайными числами
 toIO :: Integral a => [(a, a)]  -> IO a
